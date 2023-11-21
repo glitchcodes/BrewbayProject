@@ -1,22 +1,223 @@
-html {
-  font-size: 14px;
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --background-color: rgb(243, 243, 243);
+  --foreground-color: rgb(16, 16, 16);
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
+/* Unset default styles */
+
+body * {
+  margin: unset;
+  padding: unset;
+  border: unset;
+  background: unset;
+
+  font-family: "Jost", sans-serif;
+  font-weight: unset;
+
+  box-sizing: border-box;
+}
+
+/* Global style */
+
+body {
+  /* margin: 0; */
+  /* padding: 0.75rem 1rem; */
+
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+  box-sizing: border-box;
+  /* max-width: 560px; */
+  margin: auto;
+}
+
+h1,
+h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: unset;
+}
+
+main {
+  margin-bottom: 6rem;
+}
+
+/* UTILITIES */
+
+.hidden {
+  display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-auto {
+  flex: auto;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.item-center {
+  align-items: center;
+}
+
+/* Header */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /*margin-bottom: 5rem;*/
+  padding: 0.75rem 1rem;
+  background-color: #f3f3f3;
+  position: relative;
+}
+
+.brand-name {
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+
+  cursor: pointer;
+}
+
+.hamburger-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Nav */
+
+.custom-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+
+
+  background: rgb(255, 255, 255);
+  width: 40%;
+  min-width: fit-content;
+  height: 100%;
+
+  padding: 1.25rem;
+  text-align: end;
+
+  box-shadow: 2.5rem 0 2rem 2rem rgba(0, 0, 0, 0.5);
+}
+
+.custom-nav .nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.nav-list .nav-btn {
+  display: block;
+  min-width: fit-content;
+  margin-left: auto;
+}
+
+.custom-nav .nav-item {
+  list-style: none;
+}
+
+.custom-nav .nav-link {
+  font-size: 1.25rem;
+
+  display: inline-block;
+  width: 100%;
+}
+
+.close-nav-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Menu Navbar */
+.menu-list {
+  padding: 0.75rem 1rem;
+  white-space: nowrap;
+}
+
+.menu-list .item {
+  margin: 0 1rem;
+}
+
+.nav-btn {
+  width: 116px;
+  padding: 0.75rem 1rem;
+  background-color: #ddb892;
+  color: white;
+}
+
+/* Hero */
+
+.hero {
+  text-align: center;
+}
+
+.hero-text {
+  max-width: 80%;
+  margin: auto;
+
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-size: 2rem;
+  margin-bottom: 1.75rem;
+  text-transform: uppercase;
+}
+
+.hero-img {
+  max-width: 512px !important;
+}
+
+.about-img {
+  margin-right: 5rem;
+}
+
+/* Responsiveness */
+
+@media (max-width: 769px) {
+  .hero-text {
+    text-align: center;
+    margin-top: 5rem;
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 60px;
-}
+/*border track */

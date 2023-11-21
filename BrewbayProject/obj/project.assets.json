@@ -2847,19 +2847,19 @@
     ]
   },
   "packageFolders": {
-    "/home/jd/.nuget/packages/": {}
+    "/Users/vtampos/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/jd/Github/BrewbayProject/BrewbayProject/BrewbayProject.csproj",
+      "projectUniqueName": "/Users/vtampos/Projects/BrewbayProject/BrewbayProject/BrewbayProject.csproj",
       "projectName": "BrewbayProject",
-      "projectPath": "/home/jd/Github/BrewbayProject/BrewbayProject/BrewbayProject.csproj",
-      "packagesPath": "/home/jd/.nuget/packages/",
-      "outputPath": "/home/jd/Github/BrewbayProject/BrewbayProject/obj/",
+      "projectPath": "/Users/vtampos/Projects/BrewbayProject/BrewbayProject/BrewbayProject.csproj",
+      "packagesPath": "/Users/vtampos/.nuget/packages/",
+      "outputPath": "/Users/vtampos/Projects/BrewbayProject/BrewbayProject/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/jd/.nuget/NuGet/NuGet.Config"
+        "/Users/vtampos/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -2913,7 +2913,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/7.0.113/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.400/RuntimeIdentifierGraph.json"
       }
     }
   }

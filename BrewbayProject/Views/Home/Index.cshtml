@@ -2,7 +2,36 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    /* Override styles.css for this page */
+    .landing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: calc(100vh - 72px);
+    }
+
+    .hero {
+      text-align: inherit;
+    }
+
+    .hero .hero-text {
+      max-width: initial;
+    }
+</style>
+
+<main class="landing row">
+    <section class="hero col-12 col-md-7">
+        <h1 class="display-4 mb-4">
+            DISCOVER THE TASTE OF REAL COFFEE
+        </h1>
+        <p>
+            We've mastered the art of exceptional coffee. Our commitment to quality beans, precise brewing techniques, and
+            attention to every detail ensures a cup that delights with every sip. Uncover the secrets to a flawless brew 
+            with us, and savor coffee at its finest.
+        </p>
+    </section>
+    <section class="col-12 col-md-5">
+        <img src="/public/images/5.png" alt="landing-coffee-stock" class="hero-img" />
+    </section>
+</main>
