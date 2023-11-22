@@ -167,6 +167,11 @@ a {
 .menu-list {
   padding: 0.75rem 1rem;
   white-space: nowrap;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .menu-list .item {
@@ -217,4 +222,26 @@ a {
   }
 }
 
-/*border track */
+/* Bootstrap Changes */
+.btn {
+  border: 0;
+  border-radius: 0;
+  color: white;
+  padding: 0.75rem 1rem;
+}
+
+.btn.btn-primary {
+  background-color: #ddb892;
+}
+
+.btn.btn-primary:hover {
+  background-color: #c7a481;
+}
+
+.btn.btn-secondary {
+  background-color: rgb(16,16,16);
+}
+
+.btn.btn-secondary:hover {
+  background-color: rgb(64,64,64);
+}

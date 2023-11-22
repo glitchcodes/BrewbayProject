@@ -69,23 +69,27 @@
                 <h3 class="item-title">
                     @product.Name
                 </h3>
-                <form action="" method="">
+                <form asp-action="AddToCart" asp-controller="Cart">
+                    <input type="hidden" name="Id" value="@product.Id" />
+                    
                     <div class="flex items-center flex-auto">
                         <div class="variation flex flex-auto">
                             <span>
-                                <input type="radio" name="variety" id="" />
-                                <label for="">Iced</label>
+                                <input type="radio" name="size" value="Iced"/>
+                                <label>Iced</label>
                             </span>
                             <span>
-                                <input type="radio" name="variety" id="" />
-                                <label for="">Hot</label>
+                                <input type="radio" name="size" value="Hot"/>
+                                <label>Hot</label>
                             </span>
                         </div>
                         <div class="flex-col justify-center">
                             <p class="item-price ">₱ @product.Price </p>
                         </div>
                     </div>
-                    <button type="submit" class="add-to-cart-btn">Add to cart</button>
+                    <button type="submit" class="add-to-cart-btn">
+                        Add to cart
+                    </button>
                 </form>
             </div>
         }

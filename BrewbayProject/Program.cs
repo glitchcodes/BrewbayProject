@@ -20,6 +20,8 @@ builder.Services.AddDefaultIdentity<User>(options =>
     options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.AddSession();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -39,6 +41,8 @@ context.Database.EnsureCreated();
 // context.Database.EnsureDeleted();
 
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 
