@@ -19,6 +19,12 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult Login()
     {
+        // Redirect to menu page if logged in
+        if (User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Menu", "Home");
+        }
+        
         return View();
     }
 
@@ -42,6 +48,12 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult Register()
     {
+        // Redirect to menu page if logged in
+        if (User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Menu", "Home");
+        }
+        
         return View();
     }
 
