@@ -1,9 +1,74 @@
-
+@model BrewbayProject.ViewModels.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Login";
 }
 
-<section class="about-img col-">
-    <img src="/public/images/6.png" alt="landing-coffee-stock" />
-</section>
+<style>
+    .full-height {
+        height: calc(100vh - 72px);
+    }
+    .login-form {
+        min-width: 300px;
+    }
+    
+    .alert-danger ul {
+        list-style: none;
+    }
+</style>
+
+<div class="d-flex align-items-center justify-content-center full-height">
+    <section class="about-img col-">
+        <img src="/public/images/6.png" alt="landing-coffee-stock" />
+    </section>
+    <section class="login-form">
+        
+        <h4 class="mb-4 fw-bold">Register</h4>
+        
+        <form asp-action="Register" class="mb-4">
+            
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger text-danger mb-4" asp-validation-summary="All"></div>
+            }
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="FirstName"></label>
+                <input type="text" class="form-control" asp-for="FirstName"/>
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="LastName"></label>
+                <input type="text" class="form-control" asp-for="LastName"/>
+            </div>
+            
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="UserName"></label>
+                <input type="text" class="form-control" asp-for="UserName"/>
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Email"></label>
+                <input type="email" class="form-control" asp-for="Email"/>
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="Password"></label>
+                <input type="password" class="form-control" asp-for="Password"/>
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" asp-for="ConfirmPassword"></label>
+                <input type="password" class="form-control" asp-for="ConfirmPassword"/>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+
+
+            <a class="btn btn-secondary btn-block" asp-controller="Account" asp-action="Login">
+                Sign In
+            </a>
+        </form>
+    </section>
+</div>

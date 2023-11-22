@@ -1,4 +1,4 @@
-
+@model BrewbayProject.ViewModels.LoginViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -8,45 +8,51 @@
     .full-height {
         height: calc(100vh - 72px);
     }
+    .login-form {
+        min-width: 300px;
+    }
+    
+    .alert-danger ul {
+        list-style: none;
+    }
 </style>
 
 <div class="d-flex align-items-center justify-content-center full-height">
     <section class="about-img col-">
         <img src="/public/images/6.png" alt="landing-coffee-stock" />
     </section>
-    <section class="text-start">
-        <form class="mb-4">
-            <!-- Email input -->
+    <section class="login-form">
+        
+        <h4 class="mb-4 fw-bold">Login to Brewbay</h4>
+        
+        <form asp-action="Login" class="mb-4">
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger text-danger mb-4" asp-validation-summary="All"></div>
+            }
+            
             <div class="form-outline mb-4">
-                <input type="email" class="form-control" />
-                <label class="form-label">Email address</label>
+                <label class="form-label" asp-for="Username"></label>
+                <input type="text" class="form-control" asp-for="Username"/>
             </div>
-        
-            <!-- Password input -->
+
             <div class="form-outline mb-4">
-                <input type="password" class="form-control" />
-                <label class="form-label">Password</label>
+                <label class="form-label" asp-for="Password"></label>
+                <input type="password" class="form-control" asp-for="Password"/>
             </div>
-        
-            <!-- 2 column grid layout for inline styling -->
-            <div class="row mb-4">
-                <div class="col d-flex justify-content-center">
-                    <!-- Checkbox -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" checked />
-                        <label class="form-check-label">Remember me</label>
-                    </div>
-                </div>
-        
-                <div class="col">
-                    <a href="#!">Forgot password?</a>
+
+            <div class="mb-4">
+                <div class="form-check">
+                    <label class="form-check-label" asp-for="RememberMe"></label>
+                    <input class="form-check-input" type="checkbox" asp-for="RememberMe"/>
                 </div>
             </div>
-        
+
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-        
-        
+
+
             <a class="btn btn-secondary btn-block" asp-controller="Account" asp-action="Register">
                 Sign Up
             </a>

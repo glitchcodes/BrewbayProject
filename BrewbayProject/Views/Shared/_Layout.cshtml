@@ -13,44 +13,51 @@
 
 <header>
     <div class="header">
-      <h1 class="brand-name" onclick="window.location.href='/'">Brewbay</h1>
+        <h1 class="brand-name" onclick="window.location.href='/'">Brewbay</h1>
 
-      <div class="d-none d-md-flex menu-list">
-        <a class="item" asp-controller="Home" asp-action="Index">Home</a>
-        <a class="item" asp-controller="Home" asp-action="Menu">Menu</a>
-        <a class="item" asp-controller="Home" asp-action="About">About</a>
-        <a class="item" asp-controller="Home" asp-action="Tracker">Track Order</a>
-      </div>
-
-        <a class="d-none d-md-block" asp-controller="Account" asp-action="Login">
-            <button class="nav-btn">
+        <div class="d-none d-md-flex menu-list">
+            <a class="item" asp-controller="Home" asp-action="Index">Home</a>
+            <a class="item" asp-controller="Home" asp-action="Menu">Menu</a>
+            <a class="item" asp-controller="Home" asp-action="About">About</a>
+            <a class="item" asp-controller="Home" asp-action="Tracker">Track Order</a>
+        </div>
+        
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="d-none d-md-block nav-btn" asp-controller="Account" asp-action="Logout">
+                Logout
+            </a>
+        }
+        else
+        {
+            <a class="d-none d-md-block nav-btn" asp-controller="Account" asp-action="Login">
                 LOGIN
+            </a>
+        }
+        
+        <button class="hamburger-btn d-block d-md-none">
+            <img src="/public/hamburger-btn.png" alt="hamburger button" />
+        </button>
+
+        <nav class="custom-nav hidden">
+            <button class="close-nav-btn">
+                <img src="/public/close.png" alt="close button" />
             </button>
-        </a>
-
-    <button class="hamburger-btn d-block d-md-none">
-      <img src="/public/hamburger-btn.png" alt="hamburger button" />
-    </button>
-
-    <nav class="custom-nav hidden">
-      <button class="close-nav-btn">
-        <img src="/public/close.png" alt="close button" />
-      </button>
-      <ul class="nav-list">
-          <li class="nav-item">
-              <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item">
-              <a asp-controller="Home" asp-action="Menu" class="nav-link">Menu</a>
-          </li>
-          <li class="nav-item">
-              <a asp-controller="Home" asp-action="Cart" class="nav-link">Cart</a>
-          </li>
-          <li class="nav-item">
-              <a asp-controller="Home" asp-action="Orders" class="nav-link">Orders</a>
-          </li>
-      </ul>
-    </nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Home" asp-action="Menu" class="nav-link">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Home" asp-action="Cart" class="nav-link">Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Home" asp-action="Orders" class="nav-link">Orders</a>
+                </li>
+            </ul>
+        </nav>
     </div>
   </header>
 
