@@ -3,11 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BrewbayProject.Models;
 
-public enum Status
-{
-    Pending, Paid, Delivered
-}
-
 public class Order
 {
     [Key]
@@ -18,7 +13,7 @@ public class Order
     
     public User User { get; set; }
     
-    public Status Status { get; set; }
+    public string DeliveryAddress { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.Now; // Default value will be the current date and time
     

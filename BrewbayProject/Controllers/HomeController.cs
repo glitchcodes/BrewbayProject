@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using BrewbayProject.Data;
 using Microsoft.AspNetCore.Mvc;
 using BrewbayProject.Models;
 
@@ -6,11 +7,11 @@ namespace BrewbayProject.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    private readonly AppDbContext _dbContext;
+    
+    public HomeController(AppDbContext dbContext)
     {
-        _logger = logger;
+        _dbContext = dbContext;
     }
 
     public IActionResult Index()
@@ -20,7 +21,7 @@ public class HomeController : Controller
 
     public IActionResult Menu()
     {
-        return View();
+        return View(_dbContext.Products);
     }
 
     public IActionResult About()
@@ -41,11 +42,5 @@ public class HomeController : Controller
     public IActionResult Tracker()
     {
         return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

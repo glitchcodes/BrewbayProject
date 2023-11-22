@@ -42,5 +42,33 @@ public class AppDbContext: DbContext
             .WithOne(p => p.OrderItem)
             .HasForeignKey<OrderItem>(oi => oi.ProductId)
             .IsRequired();
+        
+        // Seed products table
+        builder.Entity<Product>().HasData(
+            new Product()
+            {
+                Id = 1,
+                Name = "Colombian Dark Roast",
+                Description = "A bold and rich coffee with notes of chocolate and caramel. Sourced from the high mountains of Colombia, this dark roast is perfect for those who love a robust and intense flavor profile.",
+                Image = "https://globalassets.starbucks.com/digitalassets/products/bev/SBX20190617_FeaturedDarkRoast.jpg?impolicy=1by1_tight_288",
+                Price = (decimal) 12.99
+            },
+            new Product()
+            {
+                Id = 2,
+                Name = "Chai Tea Latte",
+                Description = "Experience the perfect blend of bold black tea, aromatic spices, and creamy steamed milk with our Chai Tea Latte",
+                Image = "https://globalassets.starbucks.com/digitalassets/products/bev/SBX20220411_ChaiLatte.jpg?impolicy=1by1_tight_288",
+                Price = (decimal) 14.99
+            },
+            new Product()
+            {
+                Id = 3,
+                Name = "Espresso Con Panna",
+                Description = "Savor the intensity of espresso topped with a luscious dollop of whipped cream in our Espresso Con Panna, a rich and indulgent coffee delight.",
+                Image = "https://globalassets.starbucks.com/digitalassets/products/bev/SBX20190617_EspressoConPanna.jpg?impolicy=1by1_tight_288",
+                Price = (decimal) 11.99
+            }
+        );
     }
 }

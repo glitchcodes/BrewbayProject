@@ -2,7 +2,92 @@
     ViewData["Title"] = "Menu";
 }
 
+<style>
+    /* Menu Items */
+    .product-item {
+      padding: 0.5rem 2rem;
+    }
+
+    .product-img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      margin-bottom: 0.75rem;
+    }
+
+    .item-title {
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    .add-to-cart-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-style: none;
+      margin-top: 1.5rem;
+
+      background-color: var(--foreground-color);
+      color: var(--background-color);
+    }
+
+    .add-to-cart-btn:hover {
+      background-color: rgb(64, 64, 64);
+    }
+
+    .variation {
+      margin: 0.5rem 0;
+      gap: 2rem;
+    }
+
+    .variation label {
+      font-size: 1.2rem;
+    }
+
+    .item-price {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  </style>
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="mt-3 mb-5">
+        <h1 class="display-5 mb-4">OUR MENU</h1>
+        <p>One of a kind coffee, paired with the finest aroma of exquisite pastries from the best confectioners in the Metro.</p>
+    </div>
+
+    <h4 class="mb-3">What we offer</h4>
+    
+    <div class="row justify-content-center">
+        @foreach (var product in Model)
+        {
+            <div class="product-item col-xl-3">
+                <img src="@product.Image" alt="@product.Name" class="product-img" />
+                <h3 class="item-title">
+                    @product.Name
+                </h3>
+                <form action="" method="">
+                    <div class="flex items-center flex-auto">
+                        <div class="variation flex flex-auto">
+                            <span>
+                                <input type="radio" name="variety" id="" />
+                                <label for="">Iced</label>
+                            </span>
+                            <span>
+                                <input type="radio" name="variety" id="" />
+                                <label for="">Hot</label>
+                            </span>
+                        </div>
+                        <div class="flex-col justify-center">
+                            <p class="item-price ">₱ @product.Price </p>
+                        </div>
+                    </div>
+                    <button type="submit" class="add-to-cart-btn">Add to cart</button>
+                </form>
+            </div>
+        }
+    </div>
 </div>
