@@ -478,6 +478,6 @@ $RECYCLE.BIN/
 
 # User added
 _ReSharper.*
-BrewbayProject/bin
-BrewbayProject/obj
+**/bin/*
+**/obj/*
 packages
