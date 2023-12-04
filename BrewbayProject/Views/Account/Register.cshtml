@@ -6,69 +6,187 @@
 
 <style>
     .full-height {
-        height: calc(100vh - 72px);
+        height: calc(100vh - 75px);
     }
+
     .login-form {
         min-width: 300px;
     }
-    
+
     .alert-danger ul {
         list-style: none;
     }
+
+    body {
+        background: url("/public/images/loginbkg.png") center/cover no-repeat;
+        height: 120vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 400px;
+        background: #f7e7ce;
+        border-radius: 10px;
+        margin: 0 auto;
+        margin-top: 3rem;
+    }
+
+
+    main {
+        position: relative;
+        max-width: 400px;
+        margin: 0 auto;
+        margin-top: 3rem;
+    }
+
+    .center {
+        width: 400px;
+        background: #f7e7ce;
+        border-radius: 10px;
+    }
+
+
+
+     .center h4 {
+        text-align: center;
+        padding: 20px 0 25px 0;
+        border-bottom: 1px solid brown;
+     }
+
+     .center form {
+        padding: 0 40px;
+        box-sizing: border-box;
+     }
+
+    form .form-outline {
+        position: relative;
+        border-bottom: 2px solid #adadad;
+        margin: 30px 0;
+    }
+
+    .form-outline input {
+        width: 100%;
+        padding: 0 5px;
+        height: 40px;
+        border: none;
+        background: none;
+        outline: none;
+    }
+
+    .form-outline label {
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        color: #adadad;
+        transform: translateY(-50%);
+        pointer-events: none;
+        transition: .5s;
+    }
+
+    .form-outline span::before {
+        content: '';
+        position: absolute;
+        top: 40px;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background: #f7e7ce;
+    }
+
+    .form-outline input:focus ~ label,
+    .form-outline input:valid ~ label {
+        top: -5px;
+        color: brown;
+    }
+
+    .form-outline input:focus ~ span::before,
+    .form-outline input:valid ~ span::before {
+        width: 100%
+    }
+
+    .form-check {
+        margin: -5px 0 20px 5px;
+        color: brown;
+        cursor: pointer;
+    }
+
+        .form-check:hover {
+            text-decoration: underline;
+        }
+
+    .test {
+        width: 100%;
+        height: 50px;
+        border: 1px solid;
+        background: brown;
+        border-radius: 20px;
+        color: #f7e7ce;
+        font-weight: 700;
+        cursor: pointer;
+        outline: none;
+        margin: 0 0 25px 0;
+    }
+
+    .test:hover {
+        border-color: #adadad;
+        transition: .5s;
+    }
 </style>
 
-<div class="d-flex align-items-center justify-content-center full-height">
-    <section class="about-img col-">
-        <img src="/public/images/6.png" alt="landing-coffee-stock" />
-    </section>
-    <section class="login-form">
+<body>
+<div class="center">
         
-        <h4 class="mb-4 fw-bold">Register</h4>
+        <h4 class="fw-bold">Register</h4>
         
-        <form asp-action="Register" class="mb-4">
+        <form asp-action="Register">
             
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="alert alert-danger text-danger mb-4" asp-validation-summary="All"></div>
             }
 
-            <div class="form-outline mb-4">
+            <div class="form-outline">
                 <label class="form-label" asp-for="FirstName"></label>
                 <input type="text" class="form-control" asp-for="FirstName"/>
             </div>
 
-            <div class="form-outline mb-4">
+            <div class="form-outline">
                 <label class="form-label" asp-for="LastName"></label>
                 <input type="text" class="form-control" asp-for="LastName"/>
             </div>
             
-            <div class="form-outline mb-4">
+            <div class="form-outline">
                 <label class="form-label" asp-for="UserName"></label>
                 <input type="text" class="form-control" asp-for="UserName"/>
             </div>
 
-            <div class="form-outline mb-4">
+            <div class="form-outline">
                 <label class="form-label" asp-for="Email"></label>
                 <input type="email" class="form-control" asp-for="Email"/>
             </div>
 
-            <div class="form-outline mb-4">
+            <div class="form-outline">
                 <label class="form-label" asp-for="Password"></label>
                 <input type="password" class="form-control" asp-for="Password"/>
             </div>
 
-            <div class="form-outline mb-4">
+            <div class="form-outline">
                 <label class="form-label" asp-for="ConfirmPassword"></label>
                 <input type="password" class="form-control" asp-for="ConfirmPassword"/>
             </div>
 
             <!-- Submit button -->
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
+            <button type="submit" class="test btn btn-primary btn-block">Register</button>
 
 
-            <a class="btn btn-secondary btn-block" asp-controller="Account" asp-action="Login">
-                Sign In
+            <a class="test btn btn-secondary btn-block" asp-controller="Account" asp-action="Login">
+                Back to Login
             </a>
         </form>
-    </section>
 </div>
+</body>
