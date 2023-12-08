@@ -1,6 +1,11 @@
+using System.Diagnostics;
+using System.Net;
+using System.Text;
+using System.Text.Json;
 using BrewbayProject.Data;
 using BrewbayProject.Models;
 using BrewbayProject.Extensions;
+using BrewbayProject.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrewbayProject.Controllers;
@@ -8,10 +13,14 @@ namespace BrewbayProject.Controllers;
 public class CartController : Controller
 {
     private readonly AppDbContext _dbContext;
-    
-    public CartController(AppDbContext dbContext)
+    private readonly IConfiguration _configuration;
+
+    private const string PaymongoEndpoint = "https://api.paymongo.com/v1/";
+
+    public CartController(AppDbContext dbContext, IConfiguration configuration)
     {
         _dbContext = dbContext;
+        _configuration = configuration;
     }
     
     [HttpGet]
@@ -117,5 +126,32 @@ public class CartController : Controller
         
         HttpContext.Session.Set<List<CartItem>>("cart", cart);
         return RedirectToAction("Index");
+    }
+
+    public async Task<IActionResult> Checkout()
+    {
+        var cart = HttpContext.Session.Get<List<CartItem>>("cart");
+        var httpClient = PaymongoApiHelper.GetHttpClient(_configuration);
+
+        using StringContent jsonContent = new(
+            JsonSerializer.Serialize(new
+            {
+                data = new List<String>
+                {
+                    // "attributes" => new List()
+                }
+            }),
+            Encoding.UTF8,
+            "application/json"
+        );
+        
+        var response = await httpClient.PostAsync("checkout_sessions");
+
+        if (response.IsSuccessStatusCode)
+        {
+            // string stateInfo = response.Content.ReadAsStringAsync().Result;
+        }
+
+        return NotFound();
     }
 }
