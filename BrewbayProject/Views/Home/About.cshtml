@@ -2,7 +2,49 @@
     ViewData["Title"] = "About";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Override styles.css for this page */
+    .landing {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(100vh - 72px);
+    }
+
+    .hero {
+        text-align: inherit;
+        max-width: 60%;
+    }
+
+        .hero .hero-text {
+            max-width: initial;
+        }
+</style>
+
+<div class="container">
+    <main class="landing">
+        <section class="about-img col-">
+            <img src="/public/images/6.png" alt="landing-coffee-stock" />
+        </section>
+        <section class="hero">
+            <div class="hero-text">
+                <h1 class="hero-title">About Us</h1>
+                <p class="mb-4">
+                    Upon stepping into BrewBay Coffee Shop, one is immediately enveloped in an atmosphere of warmth and comfort.
+                    The interior design, a fusion of rustic and contemporary elements, creates an inviting space that beckons
+                    both the solo reader seeking solitude and the group of friends looking for a cozy corner to catch up.
+                </p>
+
+                <p>
+                    BrewBay Coffee Shop is much more than a caffeine haven; it's an embodiment of the cultural and social
+                    tapestry of our city. With its inviting ambiance, meticulously crafted beverages, dedication to fostering
+                    connections, and commitment to sustainability, BrewBay has woven itself into the fabric of our lives. It's
+                    not just a place to get coffee; it's a place where memories are brewed, conversations flow, and the love for
+                    coffee is shared and celebrated. So, the next time you're seeking a place to unwind, connect, or simply
+                    savor an exceptional cup of coffee, remember that BrewBay Coffee Shop is not just a destination; it's an
+                    experience waiting to be savored.
+                </p>
+            </div>
+        </section>
+    </main>
 </div>
