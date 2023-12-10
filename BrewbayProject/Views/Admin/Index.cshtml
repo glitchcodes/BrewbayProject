@@ -1,0 +1,61 @@
+@model IEnumerable<Product>;
+
+@{
+  ViewData["Title"] = "Admin Panel";
+}
+
+<style>
+
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xl-10 mx-auto">
+      <div class="card mb-4">
+        <div class="card-header py-3">
+          <div class="flex justify-content-between align-items-center">
+            <h5 class="mb-0 d-flex">Manage Products</h5>
+            <a asp-action="Add"><button type="button" class="btn btn-success">Add Product</button></a>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Products -->
+              @foreach (var product in Model)
+              {
+                <tr>
+                  <td>
+                    <img src="@product.Image" class="img-fluid">
+                  </td>
+                  <td>@product.Name</td>
+                  <td>@product.Description</td>
+                  <td>@product.Price</td>
+                  <td>
+                    <div class="d-flex gap-2">
+                      <a asp-action="Edit" asp-route-id="@product.Id"><button type="button"
+                          class="btn btn-warning">Edit</button></a>
+                      <a asp-action="Delete" asp-route-id="@product.Id"><button type="button"
+                          class="btn btn-danger">Remove</button></a>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

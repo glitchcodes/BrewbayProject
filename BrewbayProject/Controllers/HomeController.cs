@@ -8,7 +8,7 @@ namespace BrewbayProject.Controllers;
 public class HomeController : Controller
 {
     private readonly AppDbContext _dbContext;
-    
+
     public HomeController(AppDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -33,8 +33,13 @@ public class HomeController : Controller
     {
         return View();
     }
-    
+
     public IActionResult Tracker()
+    {
+        return View();
+    }
+
+    public IActionResult AdminPanel()
     {
         return View();
     }

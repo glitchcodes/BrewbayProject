@@ -10,10 +10,10 @@ public enum Role
 public class User : IdentityUser
 {
     public string FirstName { get; set; }
-    
+
     public string LastName { get; set; }
-    
+
     public Role Role { get; set; }
-    
+
     public ICollection<Order> Orders { get; set; }
 }

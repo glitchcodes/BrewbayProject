@@ -15,7 +15,7 @@ public class AccountController : Controller
         _signInManager = signInManager;
         _userManager = userManager;
     }
-    
+
     [HttpGet]
     public IActionResult Login()
     {
@@ -24,7 +24,7 @@ public class AccountController : Controller
         {
             return RedirectToAction("Menu", "Home");
         }
-        
+
         return View();
     }
 
@@ -53,7 +53,7 @@ public class AccountController : Controller
         {
             return RedirectToAction("Menu", "Home");
         }
-        
+
         return View();
     }
 
