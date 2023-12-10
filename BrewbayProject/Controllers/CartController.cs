@@ -302,6 +302,32 @@ public class CartController : Controller
         return NotFound();
     }
 
+    [HttpGet]
+    public IActionResult PaymentCanceled([FromQuery] string refId)
+    {
+        if (refId.IsNullOrEmpty())
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        
+        var cart = HttpContext.Session.Get<List<CartItem>>("cart");
+        var order = _dbContext.Orders.FirstOrDefault(o => o.ReferenceId == refId);
+
+        if (order != null)
+        {
+            order.Status = "canceled";
+            _dbContext.SaveChanges();
+            
+            // Clear cart
+            cart.Clear();
+            HttpContext.Session.Set<List<CartItem>>("cart", cart);
+
+            return View(order);
+        }
+        
+        return RedirectToAction("Index", "Home");
+    }
+
     private string GenerateReferenceId(int length)
     {
         Random random = new Random();
