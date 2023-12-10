@@ -24,7 +24,7 @@ public class AdminController : Controller
   }
 
   [HttpGet]
-  public IActionResult Add()
+  public IActionResult AddProduct()
   {
     if (!User.Identity.IsAuthenticated)
     {
@@ -35,7 +35,7 @@ public class AdminController : Controller
   }
 
   [HttpPost]
-  public IActionResult Add(Product product)
+  public IActionResult AddProduct(Product product)
   {
     if (!User.Identity.IsAuthenticated)
     {
@@ -51,7 +51,7 @@ public class AdminController : Controller
   }
 
   [HttpGet]
-  public IActionResult Edit(int id)
+  public IActionResult EditProduct(int id)
   {
     if (!User.Identity.IsAuthenticated)
     {
@@ -74,7 +74,7 @@ public class AdminController : Controller
   }
 
   [HttpPost]
-  public IActionResult Edit(Product product)
+  public IActionResult EditProduct(Product product)
   {
     if (!User.Identity.IsAuthenticated)
     {
@@ -86,31 +86,32 @@ public class AdminController : Controller
       return View();
     }
 
-    // save here
-
-    return RedirectToAction("Index");
-  }
-
-  [HttpGet]
-  public IActionResult Delete(int id)
-  {
-    if (!User.Identity.IsAuthenticated)
-    {
-      return RedirectToAction("Login", "Account");
-    }
-
-    Product? product = _dbContext.Products.FirstOrDefault(product => product.Id == id);
-
-    if (product == null)
-    {
-      return NotFound();
-    }
+    // TODO: save details
 
     return View(product);
   }
 
-  [HttpPost]
+  [HttpGet]
   public IActionResult DeleteProduct(int id)
+  {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
+    Product? product = _dbContext.Products.FirstOrDefault(product => product.Id == id);
+
+    if (product == null)
+    {
+      return NotFound();
+    }
+
+    return View(product);
+  }
+
+  [HttpPost]
+  [ActionName("DeleteProduct")]
+  public IActionResult DeleteProductConfirmed(int id)
   {
     if (!User.Identity.IsAuthenticated)
     {

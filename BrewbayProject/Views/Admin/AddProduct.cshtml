@@ -6,7 +6,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-lg-8 mx-auto">
+    <div class="col-9">
       <div class="card mb-4">
         <div class="card-header py-3">
           <div class="flex align-items-center">
@@ -16,7 +16,7 @@
 
         <div class="card-body">
           <!-- ADD FORM -->
-          <form asp-action="Add" method="post">
+          <form asp-action="AddProduct" method="post">
             <div class="mb-3">
               <label for="productName" class="form-label">Name</label>
               <input id="productName" asp-for="Name" class="form-control" />
@@ -42,6 +42,15 @@
           <!-- END FORM -->
         </div>
       </div>
+    </div>
+    <div class="col-3">
+      <h5 class="p-3 fw-semibold">Links</h5>
+      <ul class="list-group">
+        <li class="list-group-item"><a asp-action="AddProduct">Add Product</a>
+        </li>
+        <li class="list-group-item"><a asp-action="Index">View Products</a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
