@@ -3,8 +3,7 @@ namespace BrewbayProject.Models;
 public class CartItem
 {
     public Product Product { get; set; }
-    
-    public string? Size { get; set; }
+    public Size Size { get; set; }
     public int Quantity { get; set; }
 
     private decimal _SubTotal;
