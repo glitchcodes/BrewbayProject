@@ -18,9 +18,14 @@ builder.Services.AddDefaultIdentity<User>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequiredLength = 8;
     options.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<AppDbContext>();
+})
+    .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.IsEssential = true;
+    options.Cookie.HttpOnly = true;
+});
 
 builder.Services.AddControllersWithViews();
 
