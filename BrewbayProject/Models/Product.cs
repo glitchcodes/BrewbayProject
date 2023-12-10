@@ -12,7 +12,6 @@ public class Product
     public string Description { get; set; }
 
     [Required]
-    [DataType(DataType.Upload)]
     public string Image { get; set; }
 
     [Required]

@@ -47,7 +47,10 @@ public class AdminController : Controller
       return View();
     }
 
-    return View();
+    _dbContext.Products.Add(product);
+    _dbContext.SaveChanges();
+
+    return RedirectToAction("Index");
   }
 
   [HttpGet]
@@ -56,11 +59,6 @@ public class AdminController : Controller
     if (!User.Identity.IsAuthenticated)
     {
       return RedirectToAction("Login", "Account");
-    }
-
-    if (!ModelState.IsValid)
-    {
-      return View();
     }
 
     Product? product = _dbContext.Products.FirstOrDefault(product => product.Id == id);
@@ -74,7 +72,7 @@ public class AdminController : Controller
   }
 
   [HttpPost]
-  public IActionResult EditProduct(Product product)
+  public IActionResult EditProduct(Product updatedProduct)
   {
     if (!User.Identity.IsAuthenticated)
     {
@@ -83,12 +81,23 @@ public class AdminController : Controller
 
     if (!ModelState.IsValid)
     {
-      return View();
+      return View(updatedProduct);
     }
 
-    // TODO: save details
+    Product? product = _dbContext.Products.FirstOrDefault(product => product.Id == updatedProduct.Id);
 
-    return View(product);
+    if (product == null)
+    {
+      return NotFound();
+    }
+
+    product.Name = updatedProduct.Name;
+    product.Description = updatedProduct.Description;
+    product.Image = updatedProduct.Image;
+    product.Price = updatedProduct.Price;
+    _dbContext.SaveChanges();
+
+    return RedirectToAction("Index");
   }
 
   [HttpGet]
