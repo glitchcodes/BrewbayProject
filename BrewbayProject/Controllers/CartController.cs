@@ -74,7 +74,7 @@ public class CartController : Controller
                 cart.Add(
                     new CartItem
                     {
-                        Product = product, Quantity = 1
+                        Product = product, Quantity = 1, Size = sizeEnum
                     }
                 );
             }
