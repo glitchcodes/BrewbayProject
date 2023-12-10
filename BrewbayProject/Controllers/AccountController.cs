@@ -100,6 +100,11 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult OrderHistory()
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        
         var userId = _userManager.GetUserId(User);
         var orders = _dbContext.Orders
             .Where(o => o.UserId == userId)
