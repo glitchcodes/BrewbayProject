@@ -1,28 +1,29 @@
 using System.Diagnostics;
 using System.Text;
-using System.Text.Json;
 using BrewbayProject.Data;
 using BrewbayProject.Data.Paymongo;
 using BrewbayProject.Extensions;
 using BrewbayProject.Helpers;
 using BrewbayProject.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BrewbayProject.Controllers;
 
 public class CartController : Controller
 {
     private readonly AppDbContext _dbContext;
+    private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
 
-    private List<CartItem> _cart;
-
-    public CartController(AppDbContext dbContext, IConfiguration configuration)
+    public CartController(AppDbContext dbContext, UserManager<User> userManager, IConfiguration configuration)
     {
         _dbContext = dbContext;
+        _userManager = userManager;
         _configuration = configuration;
-
-        _cart = HttpContext.Session.Get<List<CartItem>>("cart");
     }
     
     [HttpGet]
@@ -48,6 +49,7 @@ public class CartController : Controller
     {
         var product = _dbContext.Products.FirstOrDefault(p => p.Id == Id);
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
+        var sizeEnum = (Size) Enum.Parse(typeof(Size), size);
 
         if (cart == null)
         {
@@ -55,7 +57,7 @@ public class CartController : Controller
             cart.Add(
                 new CartItem
                 {
-                    Product = product, Quantity = 1, Size = size
+                    Product = product, Quantity = 1, Size = sizeEnum
                 }
             );
         }
@@ -129,11 +131,33 @@ public class CartController : Controller
         HttpContext.Session.Set<List<CartItem>>("cart", cart);
         return RedirectToAction("Index");
     }
-
+    
+    [HttpGet]
     public async Task<IActionResult> Checkout()
     {
+        var userId = _userManager.GetUserId(User);
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
+
+        // Redirect user to homepage if not logged in
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        
+        // If cart is empty, return to cart page
+        // TODO: Add error message
+        if (cart.IsNullOrEmpty())
+        {
+            return RedirectToAction("Index");
+        }
+        
         var httpClient = PaymongoApiHelper.GetHttpClient(_configuration);
+        
+        // Paymongo
+        var referenceId = GenerateReferenceId(20);
+        var baseUrl = Request.Scheme + "://" + Request.Host;
+        var successUrl = baseUrl + $"/Cart/PaymentSuccess?refId={referenceId}";
+        var cancelUrl = baseUrl + $"/Cart/PaymentCanceled?refId={referenceId}";
         
         var lineItems = new List<LineItem>();
         
@@ -143,7 +167,7 @@ public class CartController : Controller
                 new LineItem
                 {
                     name = t.Product.Name,
-                    description = t.Product.Description,
+                    description = t.Size.ToString(),
                     amount = (int) t.Product.Price * 100,
                     currency = "PHP",
                     quantity = t.Quantity,
@@ -171,7 +195,9 @@ public class CartController : Controller
                             "paymaya",
                             "gcash"
                         },
-                        line_items = lineItems
+                        line_items = lineItems,
+                        success_url = successUrl,
+                        cancel_url = cancelUrl
                     }
                 }
             }),
@@ -180,12 +206,113 @@ public class CartController : Controller
         );
         
         var response = await httpClient.PostAsync("checkout_sessions", jsonContent);
-        
+        // Debug.WriteLine(response.Content.ReadAsStringAsync().Result);
         if (response.IsSuccessStatusCode)
         {
-            string stateInfo = response.Content.ReadAsStringAsync().Result;
+            var jsonString = response.Content.ReadAsStringAsync().Result;
+            var convertedJson = JsonConvert.DeserializeObject<dynamic>(jsonString)!;
+            var checkoutUrl = convertedJson.data.attributes.checkout_url.ToString() as string;
+
+            var order = new Order
+            {
+                UserId = userId,
+                ReferenceId = referenceId,
+                PaymongoCheckoutId = convertedJson.data.id.ToString() as string ?? string.Empty,
+                DeliveryAddress = "",
+                Status = "pending"
+            };
+
+            _dbContext.Orders.Add(order);
+            _dbContext.SaveChanges();
+
+            foreach (var p in cart)
+            {
+                var item = new OrderItem
+                {
+                    OrderId = order.Id,
+                    ProductId = p.Product.Id,
+                    Quantity = p.Quantity,
+                    Size = p.Size
+                };
+
+                _dbContext.OrderItems.Add(item);
+                _dbContext.SaveChanges();
+            }
+            
+            return Redirect(checkoutUrl!);
         }
 
         return NotFound();
+    }
+
+    public async Task<IActionResult> PaymentSuccess([FromQuery] string refId)
+    {
+        if (refId.IsNullOrEmpty())
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        
+        var cart = HttpContext.Session.Get<List<CartItem>>("cart");
+
+        var httpClient = PaymongoApiHelper.GetHttpClient(_configuration);
+        var order = _dbContext.Orders.FirstOrDefault(o => o.ReferenceId == refId);
+
+        if (order != null)
+        {
+            // Check if order already has payment
+            var paymentExists = _dbContext.OrderPayments.FirstOrDefault(p => p.OrderId == order.Id);
+
+            // If not, store payment info
+            if (paymentExists == null)
+            {
+                // Call Paymongo API for status
+                var response = await httpClient.GetAsync($"checkout_sessions/{order.PaymongoCheckoutId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = response.Content.ReadAsStringAsync().Result;
+                    var convertedJson = JsonConvert.DeserializeObject<dynamic>(jsonString)!;
+
+                    var payments = convertedJson.data.attributes.payments;
+                    
+                    var payment = new OrderPayment
+                    {
+                        OrderId = order.Id,
+                        PaymongoPaymentId = convertedJson.data.id,
+                        AmountPaid = ConvertToDecimal(Int16.Parse(payments[0].attributes.amount.ToString() as string)),
+                        Fee = ConvertToDecimal(Int16.Parse(payments[0].attributes.fee.ToString() as string)),
+                        NetAmount = ConvertToDecimal(Int16.Parse(payments[0].attributes.net_amount.ToString() as string))
+                    };
+                    _dbContext.OrderPayments.Add(payment);
+                    
+                    // Update orders
+                    order.Status = convertedJson.data.attributes.status;
+                    
+                    _dbContext.SaveChanges();
+                    
+                    // Clear the cart
+                    cart.Clear();
+                    HttpContext.Session.Set<List<CartItem>>("cart", cart);
+                }
+            }
+
+            return View(order);
+        }
+
+        return NotFound();
+    }
+
+    private string GenerateReferenceId(int length)
+    {
+        Random random = new Random();
+        
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+    
+    private decimal ConvertToDecimal(int x)
+    {
+        return x/(decimal)Math.Pow(10.00, 2);
     }
 }

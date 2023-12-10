@@ -11,6 +11,8 @@ public class Attributes
     public bool show_description { get; set; }
     public bool show_line_items { get; set; }
     public string description { get; set; }
+    public string success_url { get; set; }
+    public string cancel_url { get; set; }
     
     public List<String> payment_method_types { get; set; }
     public List<LineItem> line_items { get; set; }
