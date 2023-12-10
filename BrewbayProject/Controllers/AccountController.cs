@@ -1,7 +1,9 @@
+using BrewbayProject.Data;
 using BrewbayProject.Models;
 using BrewbayProject.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BrewbayProject.Controllers;
 
@@ -9,11 +11,13 @@ public class AccountController : Controller
 {
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
+    private readonly AppDbContext _dbContext;
 
-    public AccountController(SignInManager<User> signInManager, UserManager<User> userManager)
+    public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, AppDbContext dbContext)
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _dbContext = dbContext;
     }
 
     [HttpGet]
@@ -94,9 +98,17 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> OrderHistory()
+    public IActionResult OrderHistory()
     {
-        return View();
+        var userId = _userManager.GetUserId(User);
+        var orders = _dbContext.Orders
+            .Where(o => o.UserId == userId)
+            .Where(o => o.Status == "active")
+            .Include(o => o.OrderPayment)
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product);
+        
+        return View(orders);
     }
 
 }

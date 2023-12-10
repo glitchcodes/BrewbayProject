@@ -34,7 +34,7 @@ public class AppDbContext: IdentityDbContext<User>
         
         // Each order has many order items
         builder.Entity<Order>()
-            .HasMany(o => o.Items)
+            .HasMany(o => o.OrderItems)
             .WithOne(oi => oi.Order)
             .HasForeignKey(oi => oi.OrderId);
         

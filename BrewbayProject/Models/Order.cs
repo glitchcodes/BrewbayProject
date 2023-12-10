@@ -21,5 +21,6 @@ public class Order
     public DateTime CreatedAt { get; set; } = DateTime.Now; // Default value will be the current date and time
     
     public User User { get; set; }
-    public ICollection<OrderItem> Items { get; set; }
+    public List<OrderItem>? OrderItems { get; set; }
+    public OrderPayment? OrderPayment { get; set; }
 }
