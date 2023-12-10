@@ -15,4 +15,5 @@ public class OrderPayment
     public decimal AmountPaid { get; set; }
     public decimal Fee { get; set; }
     public decimal NetAmount { get; set; }
+    public string PaymentProvider { get; set; }
 }

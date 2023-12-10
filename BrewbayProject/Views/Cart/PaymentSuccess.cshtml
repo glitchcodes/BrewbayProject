@@ -1,8 +1,7 @@
-<head>
-    <title>Payment Success</title>
-</head>
-<body>
-    <style>
+@{
+    ViewData["Title"] = "Payment Successful";
+}
+<style>
         .center {
             position: absolute;
             top: 50%;
@@ -80,9 +79,9 @@
         <div class="inner-box">
             <h2>Order Details</h2>
             <ul>
-                <li><strong>Order ID:</strong> Order ID</li>
-                <li><strong>Amount Paid:</strong> 1000</li>
-                <li><strong>Payment Method:</strong> GCash</li>
+                <li><strong>Order ID:</strong> @TempData["ReferenceId"]</li>
+                <li><strong>Amount Paid:</strong> &#8369;@TempData["AmountPaid"]</li>
+                <li><strong>Payment Method:</strong> @TempData["PaymentProvider"]</li>
             </ul>
         </div>
 
@@ -92,4 +91,3 @@
 
         <p>If you have any questions, please contact our support team.</p>
     </div>
-</body>

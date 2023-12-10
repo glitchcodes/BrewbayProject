@@ -260,41 +260,50 @@ public class CartController : Controller
         if (order != null)
         {
             // Check if order already has payment
-            var paymentExists = _dbContext.OrderPayments.FirstOrDefault(p => p.OrderId == order.Id);
+            var payment = _dbContext.OrderPayments.FirstOrDefault(p => p.OrderId == order.Id);
 
-            // If not, store payment info
-            if (paymentExists == null)
+            // Call Paymongo API for status
+            var response = await httpClient.GetAsync($"checkout_sessions/{order.PaymongoCheckoutId}");
+            dynamic convertedJson = "";
+            dynamic payments = "";
+
+            if (response.IsSuccessStatusCode)
             {
-                // Call Paymongo API for status
-                var response = await httpClient.GetAsync($"checkout_sessions/{order.PaymongoCheckoutId}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonString = response.Content.ReadAsStringAsync().Result;
-                    var convertedJson = JsonConvert.DeserializeObject<dynamic>(jsonString)!;
-
-                    var payments = convertedJson.data.attributes.payments;
-                    
-                    var payment = new OrderPayment
-                    {
-                        OrderId = order.Id,
-                        PaymongoPaymentId = convertedJson.data.id,
-                        AmountPaid = ConvertToDecimal(Int16.Parse(payments[0].attributes.amount.ToString() as string)),
-                        Fee = ConvertToDecimal(Int16.Parse(payments[0].attributes.fee.ToString() as string)),
-                        NetAmount = ConvertToDecimal(Int16.Parse(payments[0].attributes.net_amount.ToString() as string))
-                    };
-                    _dbContext.OrderPayments.Add(payment);
-                    
-                    // Update orders
-                    order.Status = convertedJson.data.attributes.status;
-                    
-                    _dbContext.SaveChanges();
-                    
-                    // Clear the cart
-                    cart.Clear();
-                    HttpContext.Session.Set<List<CartItem>>("cart", cart);
-                }
+                var jsonString = response.Content.ReadAsStringAsync().Result;
+                convertedJson = JsonConvert.DeserializeObject<dynamic>(jsonString)!;
+                payments = convertedJson.data.attributes.payments;
             }
+            
+            // If not, store payment info
+            if (payment == null)
+            {
+                payment = new OrderPayment
+                {
+                    OrderId = order.Id,
+                    PaymongoPaymentId = convertedJson.data.id,
+                    AmountPaid = ConvertToDecimal(Int16.Parse(payments[0].attributes.amount.ToString() as string)),
+                    Fee = ConvertToDecimal(Int16.Parse(payments[0].attributes.fee.ToString() as string)),
+                    NetAmount = ConvertToDecimal(Int16.Parse(payments[0].attributes.net_amount.ToString() as string)),
+                    PaymentProvider = payments[0].attributes.source.type
+                };
+                _dbContext.OrderPayments.Add(payment);
+                    
+                // Update orders
+                order.Status = convertedJson.data.attributes.status;
+                    
+                await _dbContext.SaveChangesAsync();
+                    
+                // Clear the cart
+                cart.Clear();
+                HttpContext.Session.Set<List<CartItem>>("cart", cart);
+            }
+            
+            Thread.Sleep(1000);
+            
+            // Set view bag
+            TempData["ReferenceId"] = order.ReferenceId;
+            TempData["AmountPaid"] = ConvertToDecimal(Int16.Parse(payments[0].attributes.amount.ToString() as string));
+            TempData["PaymentProvider"] = payments[0].attributes.source.type;
 
             return View(order);
         }
@@ -319,13 +328,16 @@ public class CartController : Controller
             _dbContext.SaveChanges();
             
             // Clear cart
-            cart.Clear();
-            HttpContext.Session.Set<List<CartItem>>("cart", cart);
+            if (!cart.IsNullOrEmpty())
+            {
+                cart.Clear();
+                HttpContext.Session.Set<List<CartItem>>("cart", cart);
+            }
 
             return View(order);
         }
-        
-        return RedirectToAction("Index", "Home");
+
+        return NotFound();
     }
 
     private string GenerateReferenceId(int length)
