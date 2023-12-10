@@ -15,18 +15,33 @@ public class AdminController : Controller
 
   public IActionResult Index()
   {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
     return View(_dbContext.Products);
   }
 
   [HttpGet]
   public IActionResult Add()
   {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
     return View();
   }
 
   [HttpPost]
   public IActionResult Add(Product product)
   {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
     if (!ModelState.IsValid)
     {
       return View();
@@ -38,6 +53,11 @@ public class AdminController : Controller
   [HttpGet]
   public IActionResult Edit(int id)
   {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
     if (!ModelState.IsValid)
     {
       return View();
@@ -56,6 +76,11 @@ public class AdminController : Controller
   [HttpPost]
   public IActionResult Edit(Product product)
   {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
     if (!ModelState.IsValid)
     {
       return View();
@@ -69,6 +94,11 @@ public class AdminController : Controller
   [HttpGet]
   public IActionResult Delete(int id)
   {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
     Product? product = _dbContext.Products.FirstOrDefault(product => product.Id == id);
 
     if (product == null)
@@ -82,6 +112,11 @@ public class AdminController : Controller
   [HttpPost]
   public IActionResult DeleteProduct(int id)
   {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
     // user cancel operation
     if (id == -1)
     {
