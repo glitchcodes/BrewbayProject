@@ -1,6 +1,8 @@
 using BrewbayProject.Data;
 using Microsoft.AspNetCore.Mvc;
 using BrewbayProject.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BrewbayProject.Controllers;
 
@@ -144,5 +146,25 @@ public class AdminController : Controller
     _dbContext.SaveChanges();
 
     return RedirectToAction("Index");
+  }
+
+  [HttpGet]
+  public IActionResult ViewOrders([FromQuery] string selected)
+  {
+    if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Index", "Home");
+    }
+    
+    var selectedType = selected.IsNullOrEmpty() ? "Active" : selected;
+    ViewData["SelectedType"] = selectedType;
+        
+    var orders = _dbContext.Orders
+      .Where(o => o.Status == selectedType.ToLower())
+      .Include(o => o.OrderPayment)
+      .Include(o => o.OrderItems)
+      .ThenInclude(oi => oi.Product);
+
+    return View(orders);
   }
 }
