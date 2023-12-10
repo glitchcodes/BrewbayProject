@@ -9,7 +9,7 @@ public class PaymongoApiHelper
 
         client.BaseAddress = new Uri("https://api.paymongo.com/v1/");
         client.DefaultRequestHeaders.Add("Accept", "applicaiton/json");
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {secretKey}");
+        client.DefaultRequestHeaders.Add("Authorization", $"Basic c2tfdGVzdF9Ma2IxWGdxZVdKVXFDbzNCeVdONzM1a2k=");
 
         return client;
     }

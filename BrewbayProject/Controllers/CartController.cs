@@ -1,11 +1,11 @@
 using System.Diagnostics;
-using System.Net;
 using System.Text;
 using System.Text.Json;
 using BrewbayProject.Data;
-using BrewbayProject.Models;
+using BrewbayProject.Data.Paymongo;
 using BrewbayProject.Extensions;
 using BrewbayProject.Helpers;
+using BrewbayProject.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BrewbayProject.Controllers;
@@ -15,12 +15,14 @@ public class CartController : Controller
     private readonly AppDbContext _dbContext;
     private readonly IConfiguration _configuration;
 
-    private const string PaymongoEndpoint = "https://api.paymongo.com/v1/";
+    private List<CartItem> _cart;
 
     public CartController(AppDbContext dbContext, IConfiguration configuration)
     {
         _dbContext = dbContext;
         _configuration = configuration;
+
+        _cart = HttpContext.Session.Get<List<CartItem>>("cart");
     }
     
     [HttpGet]
@@ -132,24 +134,56 @@ public class CartController : Controller
     {
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
         var httpClient = PaymongoApiHelper.GetHttpClient(_configuration);
+        
+        var lineItems = new List<LineItem>();
+        
+        foreach (var t in cart)
+        {
+            lineItems.Add(
+                new LineItem
+                {
+                    name = t.Product.Name,
+                    description = t.Product.Description,
+                    amount = (int) t.Product.Price * 100,
+                    currency = "PHP",
+                    quantity = t.Quantity,
+                    images = new List<string>
+                    {
+                        t.Product.Image
+                    }
+                }
+            );
+        }
 
         using StringContent jsonContent = new(
             JsonSerializer.Serialize(new
             {
-                data = new List<String>
+                data = new PaymongoData
                 {
-                    // "attributes" => new List()
+                    attributes = new Attributes
+                    {
+                        show_description = true,
+                        show_line_items = true,
+                        send_email_receipt = false,
+                        description = "Test",
+                        payment_method_types = new List<string>
+                        {
+                            "paymaya",
+                            "gcash"
+                        },
+                        line_items = lineItems
+                    }
                 }
             }),
             Encoding.UTF8,
             "application/json"
         );
         
-        var response = await httpClient.PostAsync("checkout_sessions");
-
+        var response = await httpClient.PostAsync("checkout_sessions", jsonContent);
+        
         if (response.IsSuccessStatusCode)
         {
-            // string stateInfo = response.Content.ReadAsStringAsync().Result;
+            string stateInfo = response.Content.ReadAsStringAsync().Result;
         }
 
         return NotFound();
