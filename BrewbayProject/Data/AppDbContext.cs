@@ -9,8 +9,8 @@ public class AppDbContext: IdentityDbContext<User>
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-    
     public DbSet<OrderPayment> OrderPayments { get; set; }
+    public DbSet<AdministratorList> Administrators { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options): base(options) {}
 

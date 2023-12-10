@@ -1,3 +1,10 @@
-﻿@{
+﻿@using BrewbayProject.Data
+@using BrewbayProject.Models
+@using Microsoft.AspNetCore.Identity
+@inject AppDbContext _context
+@inject UserManager<User> _userManager
+@{
     Layout = "_Layout";
+    ViewBag.Context = _context;
+    ViewBag.UserManager = _userManager;
 }

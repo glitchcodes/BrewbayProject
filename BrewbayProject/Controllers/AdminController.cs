@@ -1,6 +1,7 @@
 using BrewbayProject.Data;
 using Microsoft.AspNetCore.Mvc;
 using BrewbayProject.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -9,15 +10,25 @@ namespace BrewbayProject.Controllers;
 public class AdminController : Controller
 {
   private readonly AppDbContext _dbContext;
+  private readonly UserManager<User> _userManager;
 
-  public AdminController(AppDbContext dbContext)
+  public AdminController(AppDbContext dbContext, UserManager<User> userManager)
   {
     _dbContext = dbContext;
+    _userManager = userManager;
   }
 
   public IActionResult Index()
   {
     if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
     {
       return RedirectToAction("Login", "Account");
     }
@@ -32,6 +43,14 @@ public class AdminController : Controller
     {
       return RedirectToAction("Login", "Account");
     }
+    
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
+    {
+      return RedirectToAction("Login", "Account");
+    }
 
     return View();
   }
@@ -40,6 +59,14 @@ public class AdminController : Controller
   public IActionResult AddProduct(Product product)
   {
     if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+    
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
     {
       return RedirectToAction("Login", "Account");
     }
@@ -62,6 +89,14 @@ public class AdminController : Controller
     {
       return RedirectToAction("Login", "Account");
     }
+    
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
+    {
+      return RedirectToAction("Login", "Account");
+    }
 
     Product? product = _dbContext.Products.FirstOrDefault(product => product.Id == id);
 
@@ -77,6 +112,14 @@ public class AdminController : Controller
   public IActionResult EditProduct(Product updatedProduct)
   {
     if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+    
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
     {
       return RedirectToAction("Login", "Account");
     }
@@ -109,6 +152,14 @@ public class AdminController : Controller
     {
       return RedirectToAction("Login", "Account");
     }
+    
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
+    {
+      return RedirectToAction("Login", "Account");
+    }
 
     Product? product = _dbContext.Products.FirstOrDefault(product => product.Id == id);
 
@@ -125,6 +176,14 @@ public class AdminController : Controller
   public IActionResult DeleteProductConfirmed(int id)
   {
     if (!User.Identity.IsAuthenticated)
+    {
+      return RedirectToAction("Login", "Account");
+    }
+    
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
     {
       return RedirectToAction("Login", "Account");
     }
@@ -154,6 +213,14 @@ public class AdminController : Controller
     if (!User.Identity.IsAuthenticated)
     {
       return RedirectToAction("Index", "Home");
+    }
+    
+    var userId = _userManager.GetUserId(User);
+    var isAdministrator = _dbContext.Administrators.Any(a => a.UserId.Equals(userId));
+
+    if (!isAdministrator)
+    {
+      return RedirectToAction("Login", "Account");
     }
     
     var selectedType = selected.IsNullOrEmpty() ? "Active" : selected;

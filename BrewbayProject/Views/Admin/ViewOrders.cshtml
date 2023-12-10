@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "All orders";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            <div class="card mb-4">
+                
+                <div class="card-header py-3">
+                    <div class="flex justify-content-between align-items-center">
+                        <h5 class="mb-0 d-flex">All orders</h5>
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Selected: @ViewBag.SelectedType
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-action="ViewOrders" asp-route-selected="Active">Paid</a></li>
+                                <li><a class="dropdown-item" asp-action="ViewOrders" asp-route-selected="Pending">Pending</a></li>
+                                <li><a class="dropdown-item" asp-action="ViewOrders" asp-route-selected="Canceled">Failed</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    @foreach (var order in Model)
+                    {
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                @order.CreatedAt
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="mb-3">Items</h5>
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                <td>Quantity</td>
+                                                <td>Type</td>
+                                                <td>Price</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach (var item in order.OrderItems)
+                                            {
+                                                <tr>
+                                                    <td>@item.Product.Name</td>
+                                                    <td>@item.Quantity</td>
+                                                    <td>@item.Size</td>
+                                                    <td>@(item.Product.Price * item.Quantity)</td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="mb-3">Order Information</h5>
+                                        
+                                        <p>Reference ID: @order.ReferenceId</p>
+                                        <p>Total amount: &#8369;@order.OrderPayment.AmountPaid</p>
+                                        <p>Status: @order.Status</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <h5 class="p-3 fw-semibold">Links</h5>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a asp-action="AddProduct">Add Product</a>
+                </li>
+                    <li class="list-group-item">
+                <a asp-action="Index">View Products</a>
+                </li>
+                <li class="list-group-item">
+                    <a asp-action="ViewOrders">View Orders</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+

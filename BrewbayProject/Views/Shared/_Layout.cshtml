@@ -1,4 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> userManager
+@{
+    var isAdministrator = false;
+    var context = ViewBag.Context as AppDbContext;
+    
+    if (User.Identity.IsAuthenticated)
+    {
+        var userId = userManager.GetUserId(User);
+        isAdministrator = context.Administrators.Any(a => a.UserId.Equals(userId));
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -34,9 +47,15 @@
                         @User.Identity.Name
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                       <li>
-                           <a class="dropdown-item" asp-controller="Account" asp-action="OrderHistory">Order History</a>
-                       </li>
+                        @if (isAdministrator)
+                        {
+                            <li>
+                                <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                            </li>
+                        }
+                        <li>
+                            <a class="dropdown-item" asp-controller="Account" asp-action="OrderHistory">Order History</a>
+                        </li>
                         <li>
                             <a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a>
                         </li>
