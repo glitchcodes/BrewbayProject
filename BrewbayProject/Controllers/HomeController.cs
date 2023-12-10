@@ -38,9 +38,4 @@ public class HomeController : Controller
     {
         return View();
     }
-
-    public IActionResult AdminPanel()
-    {
-        return View();
-    }
 }
