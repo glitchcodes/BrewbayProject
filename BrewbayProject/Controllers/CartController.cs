@@ -29,6 +29,11 @@ public class CartController : Controller
     [HttpGet]
     public IActionResult Index()
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
 
         if (cart != null)
@@ -47,6 +52,11 @@ public class CartController : Controller
     [HttpPost]
     public IActionResult AddToCart(int Id, string size)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var product = _dbContext.Products.FirstOrDefault(p => p.Id == Id);
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
         var sizeEnum = (Size) Enum.Parse(typeof(Size), size);
@@ -87,6 +97,11 @@ public class CartController : Controller
     [HttpGet]
     public IActionResult IncrementItem(int id)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
 
@@ -100,6 +115,11 @@ public class CartController : Controller
     [HttpGet]
     public IActionResult DecrementItem(int id)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
 
@@ -122,6 +142,11 @@ public class CartController : Controller
     [HttpGet]
     public IActionResult RemoveItem(int id)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        
         var product = _dbContext.Products.FirstOrDefault(p => p.Id == id);
         var cart = HttpContext.Session.Get<List<CartItem>>("cart");
         
